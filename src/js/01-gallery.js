@@ -5,9 +5,9 @@ import { galleryItems } from './gallery-items';
 console.log(galleryItems);
 
 
-import SimpleLightbox from "simplelightbox";
+import SimpleLightbox from 'simplelightbox';
 
-import "simplelightbox/dist/simple-lightbox.min.css";
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const galleryContainer = document.querySelector('.gallery');
 const imagesMarkup = creatImagesMarkup(galleryItems);
@@ -26,7 +26,7 @@ function creatImagesMarkup (galleryItems) {
     return markup;
 }
 
-const lightbox = new SimpleLightbox('.gallery a', {
+ new SimpleLightbox('.gallery a', {
 	captionDelay: 250,
     captionsData: 'alt',
 })
