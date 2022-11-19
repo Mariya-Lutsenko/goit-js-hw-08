@@ -3,25 +3,27 @@ import '../css/03-feedback.css';
 const  throttle = require('lodash.throttle');
 
 
-const refs = {
- form: document.querySelector('.feedback-form'),
- inputEmail: document.querySelector('.feedback-form input'),
- inputMessage: document.querySelector('.feedback-form textarea'),   
-}
+const form =  document.querySelector('.feedback-form');
 
-refs.form.addEventListener('submit', onFormSubmit);
+form.addEventListener('submit', onFormSubmit);
 // refs.inputMessage.addEventListener('input', onInputMessage);
 
-const formData = {};
-refs.form.addEventListener ('input', throttle (event => {
-    const formData = {email: refs.inputEmail.value, message: refs.inputMessage.value};
-    console.log (formData);
+let formData = {};
+form.addEventListener ('input', throttle (event => {
+  formData[event.target.name] = event.target.value.trim();
     localStorage.setItem('feedback-form-state', JSON.stringify (formData))
 }, 500));
 
 function onFormSubmit (event) {
     event.preventDefault();
-    console.log({email: refs.inputEmail.value, message: refs.inputMessage.value});
+    const {email, message} = event.target;
+    const emailValue = email.value.trim();
+    const messageValue = message.value.trim();
+    console.log ({
+      email: emailValue,
+      message: messageValue,
+    });
+
     event.currentTarget.reset();
     localStorage.removeItem('feedback-form-state');
 }
@@ -29,7 +31,7 @@ function onFormSubmit (event) {
 const load = key => {
     try {
       const savedInputs = localStorage.getItem(key);
-      return savedInputs === null ? undefined : JSON.parse(savedInputs);
+      return savedInputs ? JSON.parse(savedInputs) : undefined;
     } catch (error) {
       console.error(error.message);
     }
@@ -37,7 +39,10 @@ const load = key => {
   
   const storageData = load('feedback-form-state');
   if (storageData) {
-    refs.email.value = storageData.email;
-    refs.message.value = storageData.message;
+    formData = storageData;
+    const keys = Object.keys(formData);
+    for (const key of keys) {
+      form.elements[key].value = formData[key];
+    }
   }
 
