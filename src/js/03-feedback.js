@@ -2,6 +2,7 @@ import '../css/common.css';
 import '../css/03-feedback.css';
 const  throttle = require('lodash.throttle');
 
+const STORAGE_KEY = 'feedback-form-state';
 
 const form =  document.querySelector('.feedback-form');
 
@@ -11,7 +12,7 @@ form.addEventListener('submit', onFormSubmit);
 let formData = {};
 form.addEventListener ('input', throttle (event => {
   formData[event.target.name] = event.target.value.trim();
-    localStorage.setItem('feedback-form-state', JSON.stringify (formData))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify (formData))
 }, 500));
 
 function onFormSubmit (event) {
@@ -25,7 +26,7 @@ function onFormSubmit (event) {
     });
 
     event.currentTarget.reset();
-    localStorage.removeItem('feedback-form-state');
+    localStorage.removeItem(STORAGE_KEY);
 }
 
 const load = key => {
@@ -37,7 +38,7 @@ const load = key => {
     }
   };
   
-  const storageData = load('feedback-form-state');
+  const storageData = load(STORAGE_KEY);
   if (storageData) {
     formData = storageData;
     const keys = Object.keys(formData);
